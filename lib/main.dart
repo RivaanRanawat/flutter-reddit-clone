@@ -21,6 +21,11 @@ void main() async {
       child: MyApp(),
     ),
   );
+  
+  // DEBUG
+  // FirebaseAuth.instance.authStateChanges().listen((event) {
+  //   print('got user event $event');
+  // });
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -52,17 +57,22 @@ class _MyAppState extends ConsumerState<MyApp> {
               routesBuilder: (context) {
                 if (data != null) {
                   getData(ref, data);
-                  if (userModel != null) {
-                    return loggedInRoute;
-                  }
+                  return loggedInRoute;
                 }
                 return loggedOutRoute;
               },
             ),
             routeInformationParser: const RoutemasterParser(),
           ),
-          error: (error, stackTrace) => ErrorText(error: error.toString()),
-          loading: () => const Loader(),
-        );
+          error: (error, stackTrace) => Material(
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: ErrorText(
+                error: error.toString(),
+              ),
+            ),
+          ),
+          loading: () => const Material(child: Loader()),
+    );
   }
 }
